@@ -143,31 +143,22 @@ def process_msg(db, content, sender_id, sender_email, full_name):
             'sender_email': sender_email
         }
 
-    cmd, args = cleanup_matchobj(match_obj)
+    cmd, args = _cleanup_matchobj(match_obj)
 
     logger.info('Cmd: %r' % cmd)
     logger.info('Args: %r' % args)
 
     if cmd == 'add':
-        return {
-            'content': handle_add(db, cmd, args, sender_id, full_name),
-            'sender_email': sender_email
-        }
+        return _build_response(sender_email, _handle_add(db, cmd, args, sender_id, full_name))
 
     if cmd == 'remove':
-        return {
-            'content': handle_remove(db, cmd, args, sender_id),
-            'sender_email': sender_email
-        }
+        return _build_response(sender_email, _handle_remove(db, cmd, args, sender_id))
 
     if cmd == 'list':
-        return {
-            'content': handle_list(db, cmd, sender_id),
-            'sender_email': sender_email
-        }
+        return _build_response(sender_email, _handle_list(db, cmd, sender_id))
 
     if cmd == 'search':
-        return {
-            'content': handle_search(db, cmd, args, sender_id),
-            'sender_email': sender_email
-        }
+        return _build_response(sender_email, _handle_search(db, cmd, args, sender_id))
+
+    if cmd == 'help':
+        return _build_response(sender_email, _handle_help())

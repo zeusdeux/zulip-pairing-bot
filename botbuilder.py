@@ -4,26 +4,9 @@ import requests
 import random
 from pairing_bot import process_msg
 import shelve
-import logging
+from logger import logger_setup
 
-
-# from https://docs.python.org/2/howto/logging.html#configuring-logging
-# set up new logger for this file
-logger = logging.getLogger('botBuilder')
-logger.setLevel(logging.DEBUG)
-
-# console handler for logging
-conLog = logging.StreamHandler()
-conLog.setLevel(logging.DEBUG)
-
-# formatter
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-# format console logs using formatter
-conLog.setFormatter(formatter)
-
-# add console logging transport to logger
-logger.addHandler(conLog)
+logger = logger_setup('botBuilder')
 
 class bot():
     ''' bot takes a zulip username and api key, a word or phrase to respond to, a search string for giphy,

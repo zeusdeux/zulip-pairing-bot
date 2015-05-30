@@ -1,26 +1,9 @@
 from __future__ import unicode_literals
 import re
-import logging
+from logger import logger_setup
 
 
-# from https://docs.python.org/2/howto/logging.html#configuring-logging
-# set up new logger for this file
-logger = logging.getLogger('pairingBot')
-logger.setLevel(logging.DEBUG)
-
-# console handler for logging
-conLog = logging.StreamHandler()
-conLog.setLevel(logging.DEBUG)
-
-# formatter
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-# format console logs using formatter
-conLog.setFormatter(formatter)
-
-# add console logging transport to logger
-logger.addHandler(conLog)
-
+logger = logger_setup('pairingBot')
 
 '''
 As of now just splits on "," but in the future

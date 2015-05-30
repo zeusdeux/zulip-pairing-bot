@@ -27,7 +27,7 @@ As of now just splits on "," but in the future
 it should be able to handle logical operators like
 and, or, etc so that user can specify richer queries
 '''
-def prepare_args_for_cmd(cmd, str):
+def _prepare_args_for_cmd(cmd, str):
     return map(lambda s: '' if s == None else s.strip(), str.split(','))
 
 
@@ -36,7 +36,7 @@ Cleans up the re.match object
 - makes cmd lowercase
 - strips trailing whitespaces from args string
 '''
-def cleanup_matchobj(match_obj):
+def _cleanup_matchobj(match_obj):
     # convert it into dict (cuz python)
     temp = match_obj.groupdict()
 
@@ -53,9 +53,9 @@ def cleanup_matchobj(match_obj):
 Handles "add" command
 Adds items to the list of things the user is interested in
 '''
-def handle_add(db, cmd, args, sender_id, full_name):
+def _handle_add(db, cmd, args, sender_id, full_name):
     # pull args
-    args = prepare_args_for_cmd(cmd, args)
+    args = _prepare_args_for_cmd(cmd, args)
     db[sender_id] = db.get(sender_id, {})
     db[sender_id]['interests'] = db[sender_id].get('interests', []) + filter(lambda s: False if s == '' else True, args)
     db[sender_id]['full_name'] = full_name
@@ -67,8 +67,8 @@ def handle_add(db, cmd, args, sender_id, full_name):
 Handles "remove" command
 Removes items from the things the user is interested in
 '''
-def handle_remove(db, cmd, args, sender_id):
-    args = prepare_args_for_cmd(cmd, args)
+def _handle_remove(db, cmd, args, sender_id):
+    args = _prepare_args_for_cmd(cmd, args)
     db[sender_id] = db.get(sender_id, {})
     old_interests = db[sender_id].get('interests', [])
     db[sender_id]['interests'] = filter(lambda x: False if x in args else True, old_interests)
@@ -80,7 +80,7 @@ def handle_remove(db, cmd, args, sender_id):
 Handle "list" command
 Lists the user's current interests
 '''
-def handle_list(db, cmd, sender_id):
+def _handle_list(db, cmd, sender_id):
     interests = db.get(sender_id, {}).get('interests', [])
     return 'You\'re currently interested in pairing on ' + ', '.join(interests)
 

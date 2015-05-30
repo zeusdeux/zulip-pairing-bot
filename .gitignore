@@ -2,6 +2,9 @@
 **/.#*
 **/#*
 
+# pairing bot specific
+db.db
+
 # Created by https://www.gitignore.io
 
 ### Python ###

@@ -13,13 +13,10 @@ class bot():
         an optional caption or list of captions, and a list of the zulip streams it should be active in.
         it then posts a caption and a randomly selected gif in response to zulip messages.
      '''
-    def __init__(self, zulip_username, zulip_api_key, key_word, search_string, captions=[], subscribed_streams=[]):
+    def __init__(self, zulip_username, zulip_api_key, subscribed_streams=[]):
         self.username = zulip_username
         self.api_key = zulip_api_key
-        self.key_word = key_word.lower()
         self.subscribed_streams = subscribed_streams
-        self.search_string = search_string.lower()
-        self.caption = captions
         self.client = zulip.Client(zulip_username, zulip_api_key)
         self.subscriptions = self.subscribe_to_streams()
         self.db = shelve.open('./db', writeback=True)
@@ -79,38 +76,6 @@ class bot():
             })
 
 
-    def get_caption(self):
-        ''' Returns a caption for the gif. This is either an empty string (no caption),
-            the single string provided, or a random pick from a list of provided captions
-        '''
-        if not self.caption:
-            return ''
-        elif isinstance(self.caption, str):
-            return self.caption
-        else:
-            return random.choice(self.caption)
-
-
-    def get_giphy_response(self):
-        ''' Calls the giphy API and returns a gif url
-        '''
-        response = requests.get('http://api.giphy.com/v1/gifs/random', params=self.get_params())
-        if response.status_code == 200:
-            return response.json()['data']['fixed_width_downsampled_url']
-        else:
-            raise RuntimeError(':( we failed to GET giphy.\n{}'.format(response.json()))
-
-
-    def get_params(self):
-        ''' Parameters for giphy get requests
-        '''
-        params = {
-            'api_key': 'dc6zaTOxFJmzC',
-            'tag': self.search_string
-        }
-        return params
-
-
     def main(self):
         ''' Blocking call that runs forever. Calls self.respond() on every message received.
         '''
@@ -133,24 +98,7 @@ class bot():
 
 zulip_username = 'pairingbot-bot@students.hackerschool.com'
 zulip_api_key = 'ngUUzHKNDylVYEWNq5Czf8Zqgj1rDAJt'
-key_word = 'Hey Arnold!'
-search_string = 'arnold schwarzenegger'
-caption = [
-    'Your clothes, give them to me, now!',
-    'Do it!',
-    'If it bleeds, we can kill it',
-    'See you at the party Richter!',
-    'Let off some steam, Bennett',
-    'I\'ll be back',
-    'Get to the chopper!',
-    'Hasta La Vista, Baby!',
-    'Now this is the plan : Get your ass to Mars!',
-    'It\'s not a tumor!',
-    'You hit like a vegetarian!',
-    'What the f@#k did I do wrong?!',
-]
-
 subscribed_streams = []
 
-new_bot = bot(zulip_username, zulip_api_key, key_word , search_string, caption, subscribed_streams)
+new_bot = bot(zulip_username, zulip_api_key, subscribed_streams)
 new_bot.main()

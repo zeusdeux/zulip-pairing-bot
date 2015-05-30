@@ -90,13 +90,42 @@ Handles "search" command
 Returns a list of users that are interested in topics passed to search
 Future work: Add support for logical operators for richer queries
 '''
-def handle_search(db, cmd, args, sender_id):
-    args = prepare_args_for_cmd(cmd, args)
+def _handle_search(db, cmd, args, sender_id):
+    args = _prepare_args_for_cmd(cmd, args)
     db_as_list = [x for x in iter(db.iteritems())]
     list_of_maps_from_db = map(lambda (id, hash): map(lambda i: hash['full_name'] if i.lower() in args else None, hash['interests']), db_as_list)[0]
     deduped = set(list_of_maps_from_db)
     deduped.remove(None)
-    return 'The following people are interested in ' + ', '.join(args) + ':\n' + ', '.join(deduped) if len(deduped) != 0 else 'Sorry, I did not find any one who is interested in ' + ', '.join(args) + ' :('
+    return 'The following people are interested in ' + ', '.join(args) + ':\n' + '\n'.join(deduped) if len(deduped) != 0 else 'Sorry, I did not find any one who is interested in ' + ', '.join(args) + ' :('
+
+
+'''
+Provides the help string
+'''
+def _handle_help():
+    help_txt = ''
+    help_txt += 'To use Pairing Bot, send it a PM using the commands below:\n'
+    help_txt += 'Command | Description \n'
+    help_txt += '--- | --- \n'
+    help_txt += '`add <comma separated args>` | Adds the arguments to your list of interests. Example `add haskell` or add `clojure, js` \n'
+    help_txt += '`remove <comma separated args>` | Removes the arguments from your list of interest if they exist in it. Example `remove js` or remove `js, erlang` \n'
+    help_txt += '`search <comma separated args>` | Returns a list of people who have specified one or more of the arguments in their list of interests. Example `search js, python` \n'
+    help_txt += 'list | Lists your currently saved interests \n'
+    help_txt += 'help | Shows this table \n\n'
+    help_txt += 'Made with :heart_decoration: at Recurse Center \n'
+    help_txt += '> The avatar is people by NATAPON CHANTABUTR from the Noun Project\n'
+
+    return help_txt
+
+
+'''
+Build the reply object that is consumed by the method that called process_msg
+'''
+def _build_response(sender_email, content):
+    return {
+        'content': content,
+        'sender_email': sender_email
+    }
 
 
 '''
@@ -106,7 +135,7 @@ def process_msg(db, content, sender_id, sender_email, full_name):
     logger.info('Input: %r' % content)
 
     # get some captures
-    match_obj = re.match(r'^(?P<cmd>add|remove|search|list)(?P<args>\s+.*)?$', content, re.IGNORECASE)
+    match_obj = re.match(r'^(?P<cmd>add|remove|search|list|help)(?P<args>\s+.*)?$', content, re.IGNORECASE)
 
     if match_obj == None:
         return {

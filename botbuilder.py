@@ -2,7 +2,28 @@ import zulip
 import json
 import requests
 import random
+from pairing_bot import process_msg
+import shelve
+import logging
 
+
+# from https://docs.python.org/2/howto/logging.html#configuring-logging
+# set up new logger for this file
+logger = logging.getLogger('botBuilder')
+logger.setLevel(logging.DEBUG)
+
+# console handler for logging
+conLog = logging.StreamHandler()
+conLog.setLevel(logging.DEBUG)
+
+# formatter
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+# format console logs using formatter
+conLog.setFormatter(formatter)
+
+# add console logging transport to logger
+logger.addHandler(conLog)
 
 class bot():
     ''' bot takes a zulip username and api key, a word or phrase to respond to, a search string for giphy,
@@ -18,6 +39,7 @@ class bot():
         self.caption = captions
         self.client = zulip.Client(zulip_username, zulip_api_key)
         self.subscriptions = self.subscribe_to_streams()
+        self.db = shelve.open('./db', writeback=True)
 
 
     ''' Standardizes a list of streams in the form [{'name': stream}]
@@ -55,11 +77,13 @@ class bot():
             picks a caption, and calls send_message()
         '''
         if (msg['type'] == 'private' and msg['sender_email'] != zulip_username):
-            print msg['content']
-            self.send_message(msg)
-        else:
-            print "nope!"
-
+            logger.debug(msg)
+            logger.debug('Sender id: %r' % msg['sender_id'])
+            logger.debug('From: %r', msg['display_recipient'][0]['full_name'])
+            reply_msg = process_msg(self.db, msg['content'].strip(), str(msg['sender_id']), msg['sender_email'], msg['display_recipient'][0]['full_name'])
+            self.db.sync()
+            if reply_msg != None:
+                self.send_message(reply_msg)
 
 
     def send_message(self, msg):
@@ -68,8 +92,9 @@ class bot():
         self.client.send_message({
             'type': 'private',
             'to': msg['sender_email'],
-            'content': '{} dude!'.format(msg['content'])
+            'content': msg['content']
             })
+
 
     def get_caption(self):
         ''' Returns a caption for the gif. This is either an empty string (no caption),
@@ -81,6 +106,7 @@ class bot():
             return self.caption
         else:
             return random.choice(self.caption)
+
 
     def get_giphy_response(self):
         ''' Calls the giphy API and returns a gif url
@@ -105,6 +131,7 @@ class bot():
     def main(self):
         ''' Blocking call that runs forever. Calls self.respond() on every message received.
         '''
+        logger.info('Pairing bot started..')
         self.client.call_on_each_message(lambda msg: self.respond(msg))
 
 

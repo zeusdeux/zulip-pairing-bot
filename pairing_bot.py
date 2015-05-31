@@ -78,9 +78,10 @@ def _handle_search(db, cmd, args, sender_id):
     db_as_list = [x for x in iter(db.iteritems())]
     hashes = map(lambda (id, hash): hash, db_as_list)
 
-    result = map(lambda hash: hash['full_name'], filter(lambda hash: True if len(filter(lambda i: True if re.search(r'%s' % i, ','.join(hash['interests']), re.IGNORECASE) != None else False, args)) > 0 else False, hashes))
+    result = filter(lambda hash: True if len(filter(lambda i: True if re.search(r'%s' % i, ','.join(hash['interests']), re.IGNORECASE) != None else False, args)) > 0 else False, hashes)
 
-    deduped = set(result)
+    deduped = set(map(lambda hash: hash['full_name'], result))
+    # interests = map(lambda hash: hash['interests'], result)
 
     try:
         deduped.remove(None)

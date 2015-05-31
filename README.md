@@ -3,10 +3,10 @@ A zulip bot that helps people find others to pair with.
 
 For my first project in Python, I wanted to work on something simple yet fun.
 
-Zulip bots are both of those, so with the help of @kokeshii, I wrote this pairing bot.
+Zulip bots are both of those, so with the help of [@kokeshii](https://github.com/kokeshii), I wrote this pairing bot.
 
 Pairing bot gives the user a few commands that let 'em add/remove topics they are interested in
-and to search for users based on topic they supply.
+and to search for users based on topics they supply.
 
 ## Commands
 PM pairing bot with messages that use the commands listed below:

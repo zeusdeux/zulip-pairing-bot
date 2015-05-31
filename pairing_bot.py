@@ -79,7 +79,7 @@ def _handle_search(db, cmd, args, sender_id):
     hashes = map(lambda (id, hash): hash, db_as_list)
     result = filter(lambda hash: True if len(filter(lambda i: True if re.search(r'%s' % i, ','.join(hash['interests']), re.IGNORECASE) != None else False, args)) > 0 else False, hashes)
 
-    result_str = '\n'.join(map(lambda hash: hash['full_name'] + ' is interested in '+ ','.join(map(lambda arg: ','.join(filter(lambda i: True if re.search(r'%s' % arg, i) != None else False, hash['interests'])), args)), result))
+    result_str = '\n'.join(map(lambda hash: hash['full_name'] + ' is interested in '+ ''.join(map(lambda arg: ','.join(filter(lambda i: True if re.search(r'%s' % arg, i) != None else False, hash['interests'])), args)), result))
 
     return 'The following people are interested in ' + ','.join(args) + ':\n' + result_str if len(result) != 0 else 'Sorry, I did not find any one who is interested in ' + ','.join(args) + ' :('
 

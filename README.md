@@ -13,11 +13,13 @@ PM pairing bot with messages that use the commands listed below:
 
 Command | Description
 --- | ---
-`add <comma separated args>` | Adds the arguments to your list of interests. Example `add haskell` or add `clojure, js`
-`remove <comma separated args>` | Removes the arguments from your list of interest if they exist in it. Example `remove js` or remove `js, erlang`
+`add <comma separated args>` | Adds the arguments to your list of interests. Example `add haskell` or `add clojure, js`
+`remove <comma separated args>` | Removes the arguments from your list of interest if they exist in it. Example `remove js` or `remove js, erlang`
 `search <comma separated args>` | Returns a list of people who have specified one or more of the arguments in their list of interests. Example `search js, python`
-list | Lists your currently saved interests
-help | Shows this table
+list | Lists your currently saved interests. Example `list`
+help | Shows this table. Example `help`
+
+PS: Zulip doesn't seem to let me format my help text as a table. If you want to fix it, [here's the issue](https://github.com/zeusdeux/zulip-pairing-bot/issues/1).
 
 Made with :heart_decoration: at Recurse Center
 

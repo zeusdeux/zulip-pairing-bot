@@ -9,10 +9,8 @@ from logger import logger_setup
 logger = logger_setup('botBuilder')
 
 class bot():
-    ''' bot takes a zulip username and api key, a word or phrase to respond to, a search string for giphy,
-        an optional caption or list of captions, and a list of the zulip streams it should be active in.
-        it then posts a caption and a randomly selected gif in response to zulip messages.
-     '''
+    ''' Bot helps people find people to pair with
+    '''
     def __init__(self, zulip_username, zulip_api_key, subscribed_streams=[]):
         self.username = zulip_username
         self.api_key = zulip_api_key
@@ -82,19 +80,6 @@ class bot():
         logger.info('Pairing bot started..')
         self.client.call_on_each_message(lambda msg: self.respond(msg))
 
-
-''' The Customization Part!
-
-    Create a zulip bot under 'ettings" on zulip.
-    Zulip will give you a username and API key
-    key_word is the text in Zulip you would like the bot to respond to. This may be a
-        single word or a phrase.
-    search_string is what you want the bot to search giphy for.
-    caption may be one of: [] OR 'a single string' OR ['or a list', 'of strings']
-    subscribed_streams is a list of the streams the bot should be active on. An empty
-        list defaults to ALL zulip streams
-
-'''
 
 zulip_username = 'pairingbot-bot@students.hackerschool.com'
 zulip_api_key = 'ngUUzHKNDylVYEWNq5Czf8Zqgj1rDAJt'

@@ -76,10 +76,15 @@ Future work: Add support for logical operators for richer queries
 def _handle_search(db, cmd, args, sender_id):
     args = _prepare_args_for_cmd(cmd, args)
     db_as_list = [x for x in iter(db.iteritems())]
-    list_of_maps_from_db = map(lambda (id, hash): map(lambda i: hash['full_name'] if i.lower() in args else None, hash['interests']), db_as_list)[0]
+    list_of_maps_from_db = map(lambda (id, hash): map(lambda i: hash['full_name'] if len(filter(lambda a: True if re.search(r'%s' % a, i) != None else False, args)) > 0 else None, hash['interests']), db_as_list)[0]
     deduped = set(list_of_maps_from_db)
-    deduped.remove(None)
-    return 'The following people are interested in ' + ', '.join(args) + ':\n' + '\n'.join(deduped) if len(deduped) != 0 else 'Sorry, I did not find any one who is interested in ' + ', '.join(args) + ' :('
+
+    try:
+        deduped.remove(None)
+    except:
+        pass
+
+    return 'The following people are interested in ' + ','.join(args) + ':\n' + '\n'.join(deduped) if len(deduped) != 0 else 'Sorry, I did not find any one who is interested in ' + ','.join(args) + ' :('
 
 
 '''

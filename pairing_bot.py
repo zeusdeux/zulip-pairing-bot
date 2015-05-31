@@ -88,7 +88,7 @@ def _handle_search(db, cmd, args, sender_id):
     except:
         pass
 
-    return 'The following people are interested in ' + ','.join(args) + ':\n' + '\n'.join(deduped) if len(deduped) != 0 else 'Sorry, I did not find any one who is interested in ' + ','.join(args) + ' :('
+    return 'The following people are interested in ' + ','.join(args) + ':\n' + '\n'.join(result) if len(result) != 0 else 'Sorry, I did not find any one who is interested in ' + ','.join(args) + ' :('
 
 
 '''

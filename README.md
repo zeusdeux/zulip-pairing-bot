@@ -9,6 +9,8 @@ Pairing bot gives the user a few commands that let 'em add/remove topics they ar
 and to search for users based on topic they supply.
 
 ## Commands
+PM pairing bot with messages that use the commands listed below:
+
 Command | Description
 --- | ---
 `add <comma separated args>` | Adds the arguments to your list of interests. Example `add haskell` or add `clojure, js`

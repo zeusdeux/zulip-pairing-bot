@@ -5,21 +5,21 @@ from logger import logger_setup
 
 logger = logger_setup('pairingBot')
 
-'''
-As of now just splits on "," but in the future
-it should be able to handle logical operators like
-and, or, etc so that user can specify richer queries
-'''
 def _prepare_args_for_cmd(cmd, str):
+    """As of now just splits on "," but in the future it should be able to
+    handle logical operators like and, or, etc so that user can specify richer
+    queries.
+    """
+
     return map(lambda s: '' if s == None else s.strip(), str.split(','))
 
 
-'''
-Cleans up the re.match object
-- makes cmd lowercase
-- strips trailing whitespaces from args string
-'''
 def _cleanup_matchobj(match_obj):
+    """Cleans up the re.match object:
+      - makes cmd lowercase
+      - strips trailing whitespaces from args string
+    """
+
     # convert it into dict (cuz python)
     temp = match_obj.groupdict()
 
@@ -32,11 +32,12 @@ def _cleanup_matchobj(match_obj):
     return (temp['cmd'], temp['args'])
 
 
-'''
-Handles "add" command
-Adds items to the list of things the user is interested in
-'''
 def _handle_add(db, cmd, args, sender_id, full_name):
+    """Handles "add" command.
+
+    Adds items to the list of things the user is interested in.
+    """
+
     # pull args
     args = _prepare_args_for_cmd(cmd, args)
     db[sender_id] = db.get(sender_id, {})
@@ -46,11 +47,12 @@ def _handle_add(db, cmd, args, sender_id, full_name):
     return 'Saved ' + ', '.join(args)
 
 
-'''
-Handles "remove" command
-Removes items from the things the user is interested in
-'''
 def _handle_remove(db, cmd, args, sender_id):
+    """Handles "remove" command.
+
+    Removes items from the things the user is interested in.
+    """
+
     args = _prepare_args_for_cmd(cmd, args)
     db[sender_id] = db.get(sender_id, {})
     old_interests = db[sender_id].get('interests', [])
@@ -59,21 +61,23 @@ def _handle_remove(db, cmd, args, sender_id):
     return 'Removed ' + ', '.join(args) + ' from ' + ', '.join(old_interests)
 
 
-'''
-Handle "list" command
-Lists the user's current interests
-'''
 def _handle_list(db, cmd, sender_id):
+    """Handle "list" command.
+
+    Lists the user's current interests.
+    """
+
     interests = db.get(sender_id, {}).get('interests', [])
     return 'You\'re currently interested in pairing on ' + ', '.join(interests)
 
 
-'''
-Handles "search" command
-Returns a list of users that are interested in topics passed to search
-Future work: Add support for logical operators for richer queries
-'''
 def _handle_search(db, cmd, args, sender_id):
+    """Handles "search" command.
+
+    Returns a list of users that are interested in topics passed to search.
+    Future work: Add support for logical operators for richer queries.
+    """
+
     args = _prepare_args_for_cmd(cmd, args)
     db_as_list = [x for x in iter(db.iteritems())]
     hashes = map(lambda (id, hash): hash, db_as_list)
@@ -84,10 +88,9 @@ def _handle_search(db, cmd, args, sender_id):
     return 'The following people are interested in ' + ', '.join(args) + ':\n' + result_str if len(result) != 0 else 'Sorry, I did not find any one who is interested in ' + ', '.join(args) + ' :('
 
 
-'''
-Provides the help string
-'''
 def _handle_help():
+    """Provides the help string."""
+
     help_txt = ''
     help_txt += 'To use Pairing Bot, send it a PM using the commands below:\n\n'
     help_txt += 'Command | Description \n'
@@ -102,20 +105,19 @@ def _handle_help():
     return help_txt
 
 
-'''
-Build the reply object that is consumed by the method that called process_msg
-'''
 def _build_response(sender_email, content):
+    """Build the reply object that is consumed by the method that called process_msg.
+    """
+
     return {
         'content': content,
         'sender_email': sender_email
     }
 
 
-'''
-Processes input from the user and performs the action specified
-'''
 def process_msg(db, content, sender_id, sender_email, full_name):
+    """Processes input from the user and performs the action specified."""
+
     logger.info('Input: %r' % content)
 
     # get some captures

@@ -10,8 +10,8 @@ import re
 logger = logger_setup('botBuilder')
 
 class bot():
-    ''' Bot helps people find people to pair with
-    '''
+    """Bot helps people find people to pair with."""
+
     def __init__(self, zulip_username, zulip_api_key, subscribed_streams=[]):
         self.username = zulip_username
         self.api_key = zulip_api_key
@@ -21,10 +21,10 @@ class bot():
         self.db = shelve.open('./db', writeback=True)
 
 
-    ''' Standardizes a list of streams in the form [{'name': stream}]
-    '''
     @property
     def streams(self):
+        """Standardizes a list of streams in the form [{'name': stream}]."""
+
         if not self.subscribed_streams:
             streams = [{'name': stream['name']} for stream in self.get_all_zulip_streams()]
             return streams
@@ -34,8 +34,8 @@ class bot():
 
 
     def get_all_zulip_streams(self):
-        ''' Call Zulip API to get a list of all streams
-        '''
+        """Call Zulip API to get a list of all streams."""
+
         response = requests.get('https://api.zulip.com/v1/streams', auth=(self.username, self.api_key))
         if response.status_code == 200:
             return response.json()['streams']
@@ -46,15 +46,16 @@ class bot():
 
 
     def subscribe_to_streams(self):
-        ''' Subscribes to zulip streams
-        '''
+        """Subscribes to zulip streams."""
+
         self.client.add_subscriptions(self.streams)
 
 
     def respond(self, msg):
-        ''' checks msg against key_word. If key_word is in msg, gets a gif url,
-            picks a caption, and calls send_message()
-        '''
+        """checks msg against key_word. If key_word is in msg, gets a gif url,
+        picks a caption, and calls send_message().
+        """
+
         if (msg['type'] == 'private' and msg['sender_email'] != zulip_username):
             logger.debug(msg)
             logger.debug('Sender id: %r' % msg['sender_id'])
@@ -70,8 +71,8 @@ class bot():
 
 
     def send_message(self, msg):
-        ''' Sends a message to zulip stream
-        '''
+        """Sends a message to zulip stream."""
+
         self.client.send_message({
             'type': 'private',
             'to': msg['sender_email'],
@@ -80,8 +81,9 @@ class bot():
 
 
     def main(self):
-        ''' Blocking call that runs forever. Calls self.respond() on every message received.
-        '''
+        """Blocking call that runs forever. Calls self.respond() on every message received.
+        """
+
         logger.info('Pairing bot started..')
         self.client.call_on_each_message(lambda msg: self.respond(msg))
 

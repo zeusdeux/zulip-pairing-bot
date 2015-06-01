@@ -77,9 +77,9 @@ def _handle_search(db, cmd, args, sender_id):
     args = _prepare_args_for_cmd(cmd, args)
     db_as_list = [x for x in iter(db.iteritems())]
     hashes = map(lambda (id, hash): hash, db_as_list)
-    result = filter(lambda hash: True if len(filter(lambda i: True if re.search(r'%s' % i, ', '.join(hash['interests']), re.IGNORECASE) != None else False, args)) > 0 else False, hashes)
+    result = filter(lambda hash: True if len(filter(lambda i: True if re.search(re.escape(r'%s' % i), ', '.join(hash['interests']), re.IGNORECASE) != None else False, args)) > 0 else False, hashes)
 
-    result_str = '\n'.join(map(lambda hash: hash['full_name'] + ' is interested in '+ ', '.join(filter(lambda r: False if r == '' else True, map(lambda arg: ', '.join(filter(lambda i: True if re.search(r'%s' % arg, i) != None else False, hash['interests'])), args))), result))
+    result_str = '\n'.join(map(lambda hash: hash['full_name'] + ' is interested in '+ ', '.join(filter(lambda r: False if r == '' else True, map(lambda arg: ', '.join(filter(lambda i: True if re.search(re.escape(r'%s' % arg), i) != None else False, hash['interests'])), args))), result))
 
     return 'The following people are interested in ' + ', '.join(args) + ':\n' + result_str if len(result) != 0 else 'Sorry, I did not find any one who is interested in ' + ', '.join(args) + ' :('
 
@@ -119,7 +119,7 @@ def process_msg(db, content, sender_id, sender_email, full_name):
     logger.info('Input: %r' % content)
 
     # get some captures
-    match_obj = re.match(r'^(?P<cmd>add|remove|search|list|help|a|r|s|l|h)(?P<args>\s+.*)?$', content, re.IGNORECASE)
+    match_obj = re.match(r'^(?P<cmd>add|remove|search|list|help|a|r|s|l|ls|h)(?P<args>\s+.*)?$', content, re.IGNORECASE)
 
     if match_obj == None:
         return {
@@ -138,7 +138,7 @@ def process_msg(db, content, sender_id, sender_email, full_name):
     if cmd == 'remove' or cmd == 'r':
         return _build_response(sender_email, _handle_remove(db, cmd, args, sender_id))
 
-    if cmd == 'list' or cmd == 'l':
+    if cmd == 'list' or cmd == 'l' or cmd == 'ls':
         return _build_response(sender_email, _handle_list(db, cmd, sender_id))
 
     if cmd == 'search' or cmd == 's':

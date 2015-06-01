@@ -40,7 +40,7 @@ def _handle_add(db, cmd, args, sender_id, full_name):
     # pull args
     args = _prepare_args_for_cmd(cmd, args)
     db[sender_id] = db.get(sender_id, {})
-    db[sender_id]['interests'] = db[sender_id].get('interests', []) + filter(lambda s: False if s == '' else True, args)
+    db[sender_id]['interests'] = list(set(db[sender_id].get('interests', []) + filter(lambda s: False if s == '' else True, args)))
     db[sender_id]['full_name'] = full_name
     logger.info('Interests: %r' % db[sender_id])
     return 'Saved ' + ', '.join(args)

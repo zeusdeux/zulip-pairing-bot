@@ -20,17 +20,25 @@ def logger_setup(name):
     logger = logging.getLogger(name)
     logger.setLevel(loglevel)
 
+    # formatter
+    formatter = logging.Formatter('PID: %(process)d - %(asctime)s - %(name)s - %(levelname)s - %(funcName)s - %(message)s')
+
     # console handler for logging
     conLog = logging.StreamHandler()
     conLog.setLevel(loglevel)
-
-    # formatter
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
     # format console logs using formatter
     conLog.setFormatter(formatter)
 
+    # log to file handler
+    fileLog = logging.FileHandler('pairing-bot.log', encoding='utf-8')
+    fileLog.setLevel(logging.DEBUG)
+    # format console logs using formatter
+    fileLog.setFormatter(formatter)
+
     # add console logging transport to logger
     logger.addHandler(conLog)
+
+    # add file transport to logger
+    logger.addHandler(fileLog)
 
     return logger

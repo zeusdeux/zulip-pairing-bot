@@ -138,7 +138,7 @@ def process_msg(db, content, sender_id, sender_email, full_name):
     if cmd == 'remove' or cmd == 'r':
         return _build_response(sender_email, _handle_remove(db, cmd, args, sender_id))
 
-    if cmd == 'list' or cmd = 'l':
+    if cmd == 'list' or cmd == 'l':
         return _build_response(sender_email, _handle_list(db, cmd, sender_id))
 
     if cmd == 'search' or cmd == 's':

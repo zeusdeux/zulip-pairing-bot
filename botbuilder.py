@@ -5,6 +5,7 @@ import random
 from pairing_bot import process_msg
 import shelve
 from logger import logger_setup
+import re
 
 logger = logger_setup('botBuilder')
 
@@ -57,8 +58,12 @@ class bot():
         if (msg['type'] == 'private' and msg['sender_email'] != zulip_username):
             logger.debug(msg)
             logger.debug('Sender id: %r' % msg['sender_id'])
-            logger.debug('From: %r', msg['display_recipient'][0]['full_name'])
-            reply_msg = process_msg(self.db, msg['content'].strip(), str(msg['sender_id']), msg['sender_email'], msg['display_recipient'][0]['full_name'])
+            # remove bots from the display recipient list and used the 1st non bot user as the person who
+            # is trying to save his/her interests
+            # T_T
+            filtered_display_recipient = filter(lambda hash: False if re.search(r'bot', hash['short_name'], re.IGNORECASE) else True, msg['display_recipient'])
+            logger.debug('From: %r', filtered_display_recipient[0]['full_name'])
+            reply_msg = process_msg(self.db, msg['content'].strip(), str(msg['sender_id']), msg['sender_email'], filtered_display_recipient[0]['full_name'])
             self.db.sync()
             if reply_msg != None:
                 self.send_message(reply_msg)

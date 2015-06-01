@@ -95,7 +95,7 @@ def _handle_help():
     help_txt += '`add or a <comma separated args>` | Adds the arguments to your list of interests. Example `add haskell` or `add clojure, js` \n'
     help_txt += '`remove or r<comma separated args>` | Removes the arguments from your list of interest if they exist in it. Example `remove js` or `remove js, erlang` \n'
     help_txt += '`search or s<comma separated args>` | Returns a list of people who have specified one or more of the arguments in their list of interests. Example `search js, python` \n'
-    help_txt += '`list or l` | Lists your currently saved interests \n'
+    help_txt += '`list or l or ls` | Lists your currently saved interests \n'
     help_txt += '`help or h` | Shows this table \n\n\n'
     help_txt += 'Made with :heart_decoration: at Recurse Center\n'
 

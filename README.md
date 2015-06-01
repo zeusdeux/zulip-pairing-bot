@@ -16,7 +16,7 @@ Command | Description
 `add or a <comma separated args>` | Adds the arguments to your list of interests. Example `add haskell` or `add clojure, js`
 `remove or r <comma separated args>` | Removes the arguments from your list of interest if they exist in it. Example `remove js` or `remove js, erlang`
 `search or s <comma separated args>` | Returns a list of people who have specified one or more of the arguments in their list of interests. Example `search js, python`
-`list or l` | Lists your currently saved interests. Example `list`
+`list or l or ls` | Lists your currently saved interests. Example `list`
 `help or h` | Shows this table. Example `help`
 
 PS: Zulip doesn't seem to let me format my help text as a table. If you want to fix it, [here's the issue](https://github.com/zeusdeux/zulip-pairing-bot/issues/1).

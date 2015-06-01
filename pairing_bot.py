@@ -119,7 +119,7 @@ def process_msg(db, content, sender_id, sender_email, full_name):
     logger.info('Input: %r' % content)
 
     # get some captures
-    match_obj = re.match(r'^(?P<cmd>add|remove|search|list|help)(?P<args>\s+.*)?$', content, re.IGNORECASE)
+    match_obj = re.match(r'^(?P<cmd>add|remove|search|list|help|a|r|s|l|h)(?P<args>\s+.*)?$', content, re.IGNORECASE)
 
     if match_obj == None:
         return {
@@ -132,17 +132,17 @@ def process_msg(db, content, sender_id, sender_email, full_name):
     logger.info('Cmd: %r' % cmd)
     logger.info('Args: %r' % args)
 
-    if cmd == 'add':
+    if cmd == 'add' or cmd == 'a':
         return _build_response(sender_email, _handle_add(db, cmd, args, sender_id, full_name))
 
-    if cmd == 'remove':
+    if cmd == 'remove' or cmd == 'r':
         return _build_response(sender_email, _handle_remove(db, cmd, args, sender_id))
 
-    if cmd == 'list':
+    if cmd == 'list' or cmd = 'l':
         return _build_response(sender_email, _handle_list(db, cmd, sender_id))
 
-    if cmd == 'search':
+    if cmd == 'search' or cmd == 's':
         return _build_response(sender_email, _handle_search(db, cmd, args, sender_id))
 
-    if cmd == 'help':
+    if cmd == 'help' or cmd == 'h':
         return _build_response(sender_email, _handle_help())

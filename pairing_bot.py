@@ -68,7 +68,7 @@ def _handle_list(db, cmd, sender_id):
     """
 
     interests = db.get(sender_id, {}).get('interests', [])
-    return 'You\'re currently interested in pairing on ' + ', '.join(interests)
+    return 'You\'re currently interested in pairing on: \n\n* ' + '\n * '.join(interests)
 
 
 def _handle_search(db, cmd, args, sender_id):
